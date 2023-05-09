@@ -1,7 +1,10 @@
-// BUILD YOUR SERVER HERE
-
 const express = require("express");
 const server = express();
+
+server.get("/api/users", (req, res) => {
+  //console.log("gettting all users");
+  res.json("usersss!!!");
+});
 
 server.use("*", (req, res) => {
   res.status(404).json({
@@ -9,4 +12,4 @@ server.use("*", (req, res) => {
   });
 });
 
-module.exports = server; // EXPORT YOUR SERVER instead of {}
+module.exports = server;
