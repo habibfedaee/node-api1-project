@@ -4,9 +4,6 @@ const User = require("./users/model");
 
 // get all users
 server.get("/api/users", (req, res) => {
-  //console.log("gettting all users");
-  //res.json("usersss!!!");
-
   User.find()
     .then((users) => {
       //console.log(users);
@@ -25,7 +22,11 @@ server.get("/api/users", (req, res) => {
 server.get("/api/users/:id", (req, res) => {
   User.findById(req.params.id)
     .then((user) => {
-      //console.log(user);
+      if (!user) {
+        res.status(404).json({
+          message: "The user with the specified ID does not exist",
+        });
+      }
       res.json(user);
     })
     .catch((err) => {
