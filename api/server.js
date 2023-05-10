@@ -3,6 +3,48 @@ const server = express();
 const User = require("./users/model");
 server.use(express.json());
 
+// updating a user: -----------------------
+server.put("/api/users/:id", async (req, res) => {
+  try {
+    const possibleUser = await User.findById(req.params.id);
+
+    if (!possibleUser) {
+      res.status(404).json({
+        message: "The user with the specified ID does not exist",
+      });
+    } else {
+      if (!req.body.name || !req.body.bio) {
+        res.status(400).json({
+          message: "Please provide name and bio for the user",
+        });
+      } else {
+        const updatedUser = await User.update(req.params.id, req.body);
+        res.status(200).json(updatedUser);
+      }
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating the user ",
+      error: error.message,
+      stack: error.stack,
+    });
+  }
+});
+
+// deleting a user:----------------------
+server.delete("/api/users/:id", async (req, res) => {
+  const userToDelete = await User.findById(req.params.id);
+  //console.log("user to delete: ", userToDelete);
+  if (!userToDelete) {
+    res.status(404).json({
+      message: "The user with the specified ID does not exist",
+    });
+  } else {
+    const deletedUser = await User.remove(userToDelete.id);
+    res.status(200).json(deletedUser);
+  }
+});
+
 // creating a user:----------------------
 server.post("/api/users", (req, res) => {
   const user = req.body;
